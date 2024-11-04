@@ -1,0 +1,61 @@
+import tkinter as tk
+from tkinter import ttk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
+
+class GraficoApp:
+    def _init_(self, master):
+        self.master = master
+        self.master.title("Gráfico Complexo com Tkinter e Matplotlib")
+
+        # Criação de uma figura Matplotlib
+        self.fig = Figure(figsize=(8, 6), dpi=100)
+        self.ax = self.fig.add_subplot(111)
+
+        # Gerando dados
+        self.x = np.linspace(0, 10, 100)
+        self.y1 = np.sin(self.x)
+        self.y2 = np.cos(self.x)
+
+        # Plotando os dados
+        self.ax.plot(self.x, self.y1, label='Seno', color='blue')
+        self.ax.plot(self.x, self.y2, label='Cosseno', color='red')
+        self.ax.set_title('Gráfico de Seno e Cosseno')
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.legend()
+        self.ax.grid(True)
+
+        # Adicionando o gráfico à interface Tkinter
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.master)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+        # Botão para atualizar o gráfico
+        self.button_update = ttk.Button(master, text="Atualizar Gráfico", command=self.atualizar_grafico)
+        self.button_update.pack(side=tk.BOTTOM)
+
+    def atualizar_grafico(self):
+        # Atualizando os dados
+        self.y1 = np.sin(self.x + np.random.rand())
+        self.y2 = np.cos(self.x + np.random.rand())
+
+        # Limpando o gráfico anterior
+        self.ax.clear()
+        # Re-plotando os dados atualizados
+        self.ax.plot(self.x, self.y1, label='Seno', color='blue')
+        self.ax.plot(self.x, self.y2, label='Cosseno', color='red')
+        self.ax.set_title('Gráfico de Seno e Cosseno')
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.legend()
+        self.ax.grid(True)
+
+        # Atualizando o canvas
+        self.canvas.draw()
+
+if _name_ == "_main_":
+    root = tk.Tk()
+    app = GraficoApp(root)
+    root.mainloop()
